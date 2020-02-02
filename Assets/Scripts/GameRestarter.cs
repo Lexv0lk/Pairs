@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 public class GameRestarter : MonoBehaviour
@@ -10,6 +9,7 @@ public class GameRestarter : MonoBehaviour
     [SerializeField] private CardDistributer _cardDistributer;
     [SerializeField] private CardMatcher _cardMatcher;
     [SerializeField] private int _defaultTries;
+    [SerializeField] private int _defaultPairsCount;
 
     private int _lastTries;
     private int _level = 1;
@@ -18,7 +18,7 @@ public class GameRestarter : MonoBehaviour
     {
         _lastTries = _defaultTries;
         _tryCounter.SetTries(_lastTries);
-        _cardDistributer.AddCards(8);
+        _cardDistributer.AddCards(_defaultPairsCount);
     }
 
     private void OnEnable()

@@ -23,15 +23,19 @@ public class TryCounter : MonoBehaviour
 
     public void SetTries(int value)
     {
-        _currentValue = value;
-        _text.text = _currentValue.ToString();
+        ChangeValue(value);
     }
 
     private void OnMistaken()
     {
-        _currentValue--;
-        _text.text = _currentValue.ToString();
+        ChangeValue(_currentValue - 1);
         if (_currentValue == 0)
             TriesEnded?.Invoke();
+    }
+
+    private void ChangeValue(int newValue)
+    {
+        _currentValue = newValue;
+        _text.text = "Попытки: " + _currentValue.ToString();
     }
 }

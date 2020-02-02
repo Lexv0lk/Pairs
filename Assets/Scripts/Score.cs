@@ -21,6 +21,6 @@ public class Score : MonoBehaviour
     private void OnMatchFound()
     {
         _currentValue++;
-        _text.text = _currentValue.ToString();
+        _text.text = "Счёт: " + _currentValue;
     }
 }

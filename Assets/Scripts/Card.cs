@@ -15,10 +15,12 @@ public class Card : MonoBehaviour, IPointerClickHandler
         set => _number.text = value.ToString();
     }
     public Transform ImageTransform => _imageTransform;
+    public Transform BottomPoint => _bottomPoint;
 
     [SerializeField] private Text _number;
     [SerializeField] private Transform _imageTransform;
     [SerializeField] private float _rotationVelocity;
+    [SerializeField] private Transform _bottomPoint;
 
     private bool _isRotating;
 

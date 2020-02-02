@@ -14,7 +14,8 @@ public class CardDistributer : MonoBehaviour
 
     [SerializeField] private Card _cardPrefab;
     [SerializeField] private GridLayoutGroup _cardGrid;
-    [SerializeField] private float _speed;
+    [SerializeField] private float _distributionSpeed;
+    [SerializeField, Range(0, 1)] private float _scalingSpeed;
 
     private List<Card> _cards = new List<Card>();
 
@@ -37,6 +38,7 @@ public class CardDistributer : MonoBehaviour
         }
 
         SeedCards();
+        yield return StartCoroutine(ScaleCards());
         IsDistributing = false;
     }
 
@@ -63,11 +65,26 @@ public class CardDistributer : MonoBehaviour
         }
     }
 
+    private IEnumerator ScaleCards()
+    {
+        Transform lastCard = _cards[_cards.Count - 1].BottomPoint;
+        Vector3 lowestCardScreenPosition = Camera.main.WorldToScreenPoint(lastCard.position);
+        if (0 < lowestCardScreenPosition.y)
+            yield break;
+
+        while (0 > lowestCardScreenPosition.y)
+        {
+            _cardGrid.cellSize = new Vector2(_cardGrid.cellSize.x * (1 - _scalingSpeed), _cardGrid.cellSize.y * (1 - _scalingSpeed));
+            yield return null;
+            lowestCardScreenPosition = Camera.main.WorldToScreenPoint(lastCard.position);
+        }
+    }
+
     private IEnumerator MoveCardToCell(Card card)
     {
         while(card.ImageTransform.localPosition != Vector3.zero)
         {
-            card.ImageTransform.localPosition = Vector2.MoveTowards(card.ImageTransform.localPosition, Vector3.zero, _speed * Time.deltaTime);
+            card.ImageTransform.localPosition = Vector2.MoveTowards(card.ImageTransform.localPosition, Vector3.zero, _distributionSpeed * Time.deltaTime);
             yield return null;
         }
     }
