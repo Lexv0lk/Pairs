@@ -8,40 +8,41 @@ public class Card : MonoBehaviour, IPointerClickHandler
 {
     public UnityAction<Card> Clicked;
 
-    public bool IsOpened => _number.enabled;
+    public bool IsOpened { get; private set; }
     public int Number
     {
         get => int.Parse(_number.text);
         set => _number.text = value.ToString();
     }
     public Transform ImageTransform => _imageTransform;
-    public Transform BottomPoint => _bottomPoint;
+    public Transform UpperPoint => _upperPoint;
 
     [SerializeField] private Text _number;
     [SerializeField] private Transform _imageTransform;
     [SerializeField] private float _rotationVelocity;
-    [SerializeField] private Transform _bottomPoint;
+    [SerializeField] private Transform _upperPoint;
 
     private bool _isRotating;
 
     public void Open()
     {
-        StartCoroutine(RotateAround(_rotationVelocity, () => _number.enabled = true));
+        StartCoroutine(RotateAround(_rotationVelocity));
     }
 
     public void Close()
     {
-        StartCoroutine(RotateAround(-_rotationVelocity, () => _number.enabled = false));
+        StartCoroutine(RotateAround(-_rotationVelocity));
     }
 
-    private IEnumerator RotateAround(float speed, UnityAction OnHalfRotated)
+    private IEnumerator RotateAround(float speed)
     {
         _isRotating = true;
         float startScale = _imageTransform.localScale.x;
         yield return StartCoroutine(ChangeCardRotation(0, speed * Time.deltaTime, Mathf.Min(startScale, 0), Mathf.Max(startScale, 0)));
-        OnHalfRotated?.Invoke();
+        _number.enabled = !_number.enabled;
         yield return StartCoroutine(ChangeCardRotation(-startScale, speed * Time.deltaTime, Mathf.Min(-startScale, 0), Mathf.Max(-startScale, 0)));
         _isRotating = false;
+        IsOpened = !IsOpened;
     }
 
     private IEnumerator ChangeCardRotation(float targetValue, float speed, float minimum, float maximum)

@@ -15,6 +15,7 @@ public class CardDistributer : MonoBehaviour
     [SerializeField] private Card _cardPrefab;
     [SerializeField] private GridLayoutGroup _cardGrid;
     [SerializeField] private float _distributionSpeed;
+    [SerializeField] private Transform _frameUpperBorder;
     [SerializeField, Range(0, 1)] private float _scalingSpeed;
 
     private List<Card> _cards = new List<Card>();
@@ -27,6 +28,7 @@ public class CardDistributer : MonoBehaviour
     private IEnumerator AddingCards(int count)
     {
         IsDistributing = true;
+        yield return StartCoroutine(RegivingCards());
 
         for (int i = 0; i < count; i++)
         {
@@ -40,6 +42,18 @@ public class CardDistributer : MonoBehaviour
         SeedCards();
         yield return StartCoroutine(ScaleCards());
         IsDistributing = false;
+    }
+
+    private IEnumerator RegivingCards()
+    {
+        if (_cards.Count == 0)
+            yield break;
+
+        foreach (var card in _cards)
+            card.ImageTransform.position = transform.position;
+
+        foreach (var card in _cards)
+            yield return StartCoroutine(MoveCardToCell(card));
     }
 
     private void SeedCards()
@@ -67,16 +81,17 @@ public class CardDistributer : MonoBehaviour
 
     private IEnumerator ScaleCards()
     {
-        Transform lastCard = _cards[_cards.Count - 1].BottomPoint;
-        Vector3 lowestCardScreenPosition = Camera.main.WorldToScreenPoint(lastCard.position);
-        if (0 < lowestCardScreenPosition.y)
+        Transform firstCard = _cards[0].UpperPoint;
+        Vector3 highestCardScreenPosition = Camera.main.WorldToScreenPoint(firstCard.position);
+        Vector3 upperBorderScreenPosition = Camera.main.WorldToScreenPoint(_frameUpperBorder.position);
+        if (upperBorderScreenPosition.y > highestCardScreenPosition.y)
             yield break;
 
-        while (0 > lowestCardScreenPosition.y)
+        while (upperBorderScreenPosition.y < highestCardScreenPosition.y)
         {
             _cardGrid.cellSize = new Vector2(_cardGrid.cellSize.x * (1 - _scalingSpeed), _cardGrid.cellSize.y * (1 - _scalingSpeed));
             yield return null;
-            lowestCardScreenPosition = Camera.main.WorldToScreenPoint(lastCard.position);
+            highestCardScreenPosition = Camera.main.WorldToScreenPoint(firstCard.position);
         }
     }
 

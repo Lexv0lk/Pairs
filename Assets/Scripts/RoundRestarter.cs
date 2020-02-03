@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.Events;
+using System.Linq;
 
 public class RoundRestarter : MonoBehaviour
 {
@@ -36,6 +38,14 @@ public class RoundRestarter : MonoBehaviour
     {
         foreach (var card in _cardDistributer.Cards)
             card.Close();
+
+        StartCoroutine(IncreaseLevel());
+    }
+
+    private IEnumerator IncreaseLevel()
+    {
+        while (_cardDistributer.Cards.All(x => x.IsOpened == false) == false)
+            yield return null;
 
         Level++;
         if (Level >= 10)
