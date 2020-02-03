@@ -708,7 +708,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 776055fca105ad14cb0bac1ea9fe2127, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sessionsDelay: 1
+  _sessionsDelay: 5
   _playButton: {fileID: 1068486279}
   _playButtonText: {fileID: 181875235}
 --- !u!1 &1502827520
