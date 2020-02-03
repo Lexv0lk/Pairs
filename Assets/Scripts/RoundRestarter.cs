@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-public class GameRestarter : MonoBehaviour
+public class RoundRestarter : MonoBehaviour
 {
-    public UnityAction GameEnded;
+    public UnityAction LevelChanged;
+
+    public int Level { get; private set; } = 1;
 
     [SerializeField] private TryCounter _tryCounter;
     [SerializeField] private CardDistributer _cardDistributer;
@@ -12,7 +14,6 @@ public class GameRestarter : MonoBehaviour
     [SerializeField] private int _defaultPairsCount;
 
     private int _lastTries;
-    private int _level = 1;
 
     private void Start()
     {
@@ -23,31 +24,26 @@ public class GameRestarter : MonoBehaviour
 
     private void OnEnable()
     {
-        _tryCounter.TriesEnded += OnTriesEnded;
         _cardMatcher.AllMatchesFound += OnAllMatchesFound;
     }
 
     private void OnDisable()
     {
-        _tryCounter.TriesEnded -= OnTriesEnded;
         _cardMatcher.AllMatchesFound -= OnAllMatchesFound;
-    }
-
-    private void OnTriesEnded()
-    {
-        GameEnded?.Invoke();
     }
 
     private void OnAllMatchesFound()
     {
         foreach (var card in _cardDistributer.Cards)
             card.Close();
-        _cardDistributer.AddCards(1);
 
-        _level++;
-        if (_level >= 10)
+        Level++;
+        if (Level >= 10)
             _lastTries++;
 
         _tryCounter.SetTries(_lastTries);
+        LevelChanged?.Invoke();
+
+        _cardDistributer.AddCards(1);
     }
 }

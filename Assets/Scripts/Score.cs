@@ -3,10 +3,10 @@ using UnityEngine.UI;
 
 public class Score : MonoBehaviour
 {
+    public int Value { get; private set; }
+
     [SerializeField] private Text _text;
     [SerializeField] private CardMatcher _cardMatcher;
-
-    private int _currentValue;
 
     private void OnEnable()
     {
@@ -20,7 +20,7 @@ public class Score : MonoBehaviour
 
     private void OnMatchFound()
     {
-        _currentValue++;
-        _text.text = "Счёт: " + _currentValue;
+        Value++;
+        _text.text = "Счёт: " + Value;
     }
 }
