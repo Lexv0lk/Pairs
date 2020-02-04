@@ -5,16 +5,15 @@ using UnityEngine.Events;
 
 public class CardMatcher : MonoBehaviour
 {
-    public UnityAction MatchFound;
-    public UnityAction Mistaken;
-    public UnityAction AllMatchesFound;
-
     [SerializeField] private CardDistributer _cardDistributer;
     [SerializeField] private float _matchDelay;
 
     private List<Card> _openedCards = new List<Card>();
-
     private int _totalOpened = 0;
+
+    public event UnityAction MatchFound;
+    public event UnityAction Mistaken;
+    public event UnityAction AllMatchesFound;
 
     private void OnEnable()
     {
@@ -32,7 +31,7 @@ public class CardMatcher : MonoBehaviour
 
     private void OnCardClicked(Card card)
     {
-        if (card.IsOpened || _openedCards.Count == 2 || _cardDistributer.IsDistributing)
+        if (card.IsOpen || _openedCards.Count == 2 || _cardDistributer.IsDistributing)
             return;
 
         _openedCards.Add(card);

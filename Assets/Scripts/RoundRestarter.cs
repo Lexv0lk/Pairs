@@ -5,10 +5,6 @@ using System.Linq;
 
 public class RoundRestarter : MonoBehaviour
 {
-    public UnityAction LevelChanged;
-
-    public int Level { get; private set; } = 1;
-
     [SerializeField] private TryCounter _tryCounter;
     [SerializeField] private CardDistributer _cardDistributer;
     [SerializeField] private CardMatcher _cardMatcher;
@@ -16,6 +12,10 @@ public class RoundRestarter : MonoBehaviour
     [SerializeField] private int _defaultPairsCount;
 
     private int _lastTries;
+
+    public event UnityAction LevelChanged;
+
+    public int Level { get; private set; } = 1;
 
     private void Start()
     {
@@ -44,7 +44,7 @@ public class RoundRestarter : MonoBehaviour
 
     private IEnumerator IncreaseLevel()
     {
-        while (_cardDistributer.Cards.All(x => x.IsOpened == false) == false)
+        while (_cardDistributer.Cards.All(x => x.IsOpen == false) == false)
             yield return null;
 
         Level++;

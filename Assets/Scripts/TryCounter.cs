@@ -4,12 +4,12 @@ using UnityEngine.UI;
 
 public class TryCounter : MonoBehaviour
 {
-    public UnityAction TriesEnded;
-
     [SerializeField] private Text _text;
     [SerializeField] private CardMatcher _cardMatcher;
 
     private int _currentValue;
+
+    public event UnityAction TriesEnded;
 
     private void OnEnable()
     {

@@ -6,9 +6,16 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour, IPointerClickHandler
 {
-    public UnityAction<Card> Clicked;
+    [SerializeField] private Text _number;
+    [SerializeField] private Transform _imageTransform;
+    [SerializeField] private float _rotationVelocity;
+    [SerializeField] private Transform _upperPoint;
 
-    public bool IsOpened { get; private set; }
+    private bool _isRotating;
+
+    public event UnityAction<Card> Clicked;
+
+    public bool IsOpen { get; private set; }
     public int Number
     {
         get => int.Parse(_number.text);
@@ -16,13 +23,6 @@ public class Card : MonoBehaviour, IPointerClickHandler
     }
     public Transform ImageTransform => _imageTransform;
     public Transform UpperPoint => _upperPoint;
-
-    [SerializeField] private Text _number;
-    [SerializeField] private Transform _imageTransform;
-    [SerializeField] private float _rotationVelocity;
-    [SerializeField] private Transform _upperPoint;
-
-    private bool _isRotating;
 
     public void Open()
     {
@@ -42,7 +42,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         _number.enabled = !_number.enabled;
         yield return StartCoroutine(ChangeCardRotation(-startScale, speed * Time.deltaTime, Mathf.Min(-startScale, 0), Mathf.Max(-startScale, 0)));
         _isRotating = false;
-        IsOpened = !IsOpened;
+        IsOpen = !IsOpen;
     }
 
     private IEnumerator ChangeCardRotation(float targetValue, float speed, float minimum, float maximum)

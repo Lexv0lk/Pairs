@@ -6,12 +6,6 @@ using UnityEngine.UI;
 
 public class CardDistributer : MonoBehaviour
 {
-    public UnityAction<Card> Distributed;
-    public UnityAction DistributionEnded;
-
-    public IReadOnlyCollection<Card> Cards => _cards.AsReadOnly();
-    public bool IsDistributing { get; private set; }
-
     [SerializeField] private Card _cardPrefab;
     [SerializeField] private GridLayoutGroup _cardGrid;
     [SerializeField] private float _distributionSpeed;
@@ -19,6 +13,12 @@ public class CardDistributer : MonoBehaviour
     [SerializeField, Range(0, 1)] private float _scalingSpeed;
 
     private List<Card> _cards = new List<Card>();
+
+    public event UnityAction<Card> Distributed;
+    public event UnityAction DistributionEnded;
+
+    public IReadOnlyCollection<Card> Cards => _cards.AsReadOnly();
+    public bool IsDistributing { get; private set; }
 
     public void AddCards(int pairsCount)
     {
